@@ -7,6 +7,7 @@ import numpy as np
 TRAIN_INPUTS = ""
 TRAIN_TARGETS = ""
 
+
 class Dataset(object):
 
     def __init__(self):
