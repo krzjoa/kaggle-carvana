@@ -3,8 +3,10 @@ import theano.tensor as T
 import lasagne
 import lasagne.layers as L
 
+
 WIDTH = 1230
 HEIGHT = 1230
+
 
 class BaseModel(object):
 
@@ -30,12 +32,20 @@ class BaseModel(object):
         updates = lasagne.updates.adam(loss, model_params, learning_rate=self.lr)
 
         train_fun = theano.function([self.X, self.Y], loss, updates=updates)
-        
+
+        # Validation function
+
 
 
         for e in xrange(self.epochs):
+
+            # Iterating training batches
             for inp, tar in dataset.iter_batch(self.batch_size):
                 batch_loss = train_fun(inp, tar)
+
+            # Iterating validation batches
+            # for inp, tar in dataset.iter_batch(self.batch_size):
+            #     batch_loss = train_fun(inp, tar)
 
 
     def forward(self, dataset, batch_size):
@@ -46,8 +56,6 @@ class BaseModel(object):
         process = theano.function([self.X], output)
 
         return process(inp)
-
-
 
 
     def build_cnn(self):
@@ -71,6 +79,6 @@ class BaseModel(object):
         network = L.Conv2DLayer(network, num_filters=32, filter_size=(9, 9),
                                 pad='same', nonlinearity=activation)
         network = L.Conv2DLayer(network, num_filters=32, filter_size=(9, 9),
-                                pad='same', nonlinearity=activation)
+                                pad='same', nonlinearity=lasagne.nonlinearities.identity)
 
         return network
